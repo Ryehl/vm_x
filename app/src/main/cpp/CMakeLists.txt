@@ -23,6 +23,20 @@ file(GLOB SRC_ANDROID_2_CPP "android/**/**/*.cpp")
 file(GLOB SRC_ANDROID_2_C "android/**/**/*.c")
 file(GLOB SRC_ANDROID_CPP "android/**/*.cpp")
 file(GLOB SRC_ANDROID_C "android/**/*.c")
+
+#android/**/**
+add_library(
+        bm_android
+
+        SHARED
+
+        # source
+        ${SRC_ANDROID_2_CPP}
+        ${SRC_ANDROID_2_C}
+        ${SRC_ANDROID_CPP}
+        ${SRC_ANDROID_C}
+)
+
 file(GLOB SRC_E_COMMON_CPP "emugl/common/*.cpp")
 file(GLOB SRC_E_COMMON_C "emugl/common/*.c") #none
 file(GLOB SRC_DISPATCH_CPP "include/OpenGLESDispatch/*.cpp") #4
@@ -32,6 +46,7 @@ file(GLOB SRC_OPENGLCODECOMMON_CPP "OpenglCodecCommon/*.cpp")
 file(GLOB SRC_VENDOR_CPP "vendor/**/*.cpp")
 file(GLOB SRC_VENDOR_C "vendor/**/*.c")
 
+#opengl
 add_library(
         # name
         emugl
@@ -39,10 +54,6 @@ add_library(
         SHARED
 
         # source
-        ${SRC_ANDROID_2_CPP}
-        ${SRC_ANDROID_2_C}
-        ${SRC_ANDROID_CPP}
-        ${SRC_ANDROID_C}
         ${SRC_E_COMMON_CPP}
         ${SRC_E_COMMON_C}
         ${SRC_DISPATCH_CPP}
@@ -74,6 +85,16 @@ add_library(
         camera/bm_camera.cpp
 )
 
+#gps
+add_library(
+        gps
+
+        SHARED
+
+        gps/gps.c
+        gps/bm_gps.cpp
+)
+
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
 # default, you only need to specify the name of the public NDK library
@@ -81,9 +102,6 @@ add_library(
 # completing its build.
 
 find_library(log-lib log)
-#find_library(EGL-lib EGL)
-#find_library(GLESv1-lib GLESv1_CM)
-#find_library(GLESv2-lib GLESv2)
 
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
@@ -104,12 +122,10 @@ target_link_libraries( # Specifies the target library.
 
         # Links the target library to the vendor.log library
         # included in the NDK.
+        bm_android
         -ljnigraphics
         -landroid
         ${log-lib}
-#        ${EGL-lib}
-#        ${GLESv1-lib}
-#        ${GLESv2-lib}
         )
 
 target_link_libraries(
@@ -125,5 +141,14 @@ target_link_libraries(
 
         # Links the target library to the vendor.log library
         # included in the NDK.
+        ${log-lib}
+)
+
+target_link_libraries(
+        gps
+
+        # Links the target library to the vendor.log library
+        # included in the NDK.
+        bm_android
         ${log-lib}
 )

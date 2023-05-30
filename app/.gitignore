@@ -1,2 +1,4 @@
+src/main/assets/rom.tar.xz
 /build
 .cxx
+./.cxx

@@ -25,7 +25,7 @@ extern "C" {
  * emulated GPS unit. see qemu_chr_open() in vl.c */
 //extern CSerialLine* android_gps_serial_line;
 
-extern void android_gps_send_nmea(int fd, const char *sentence);
+extern int android_gps_send_nmea(int fd, const char *sentence);
 
 // Send a GPS location to the AVD using an NMEA sentence
 //
@@ -35,7 +35,7 @@ extern void android_gps_send_nmea(int fd, const char *sentence);
 //         nSatellites:     Number of satellites used
 //         time:            UTC, in the format provided
 //                          by gettimeofday()
-extern void android_gps_send_location(int fd, double latitude, double longitude,
+extern int android_gps_send_location(int fd, double latitude, double longitude,
                                       double metersElevation, int nSatellites,
                                       const struct timeval *time);
 

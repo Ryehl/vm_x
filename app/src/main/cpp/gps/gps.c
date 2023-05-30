@@ -11,12 +11,15 @@
 */
 
 #define USE_STREAM 1
+#define LOG_TAG "gps.c"
 
 #include "gps.h"
 #include "android/utils/debug.h"
 #include "android/utils/stralloc.h"
-
+#include "log/log_main.h"
 #include <string.h>
+#include <sys/socket.h>
+#include <errno.h>
 
 #if !USE_STREAM
 CSerialLine* android_gps_serial_line;
@@ -24,49 +27,54 @@ CSerialLine* android_gps_serial_line;
 // Set to true to ping guest for location updates every few seconds
 static bool s_enable_passive_location_update = true;
 
-#define  D(...)  VERBOSE_PRINT(gps,__VA_ARGS__)
-
-#include <sys/socket.h>
+//#define  D(...)  VERBOSE_PRINT(gps,__VA_ARGS__)
+#define  D(...)  ((void)0)
 
 #if USE_STREAM
-void
+size_t
 sendFull(int fd, const char *msg, size_t len) {
     size_t sendLen = 0;
     while (true) {
         ssize_t sendResult = send(fd, msg, len - sendLen, 0);
         if (sendResult <= 0) {
             //error
-            return;
+            ALOGE("send error(%d): %s", errno, strerror(errno));
+            return -1;
         }
         sendLen += sendResult;
         if (sendResult == len) {
             break;
         }
     }
+    return sendLen;
 }
 #endif
 
 
-void
+int
 android_gps_send_nmea(int fd, const char *sentence) {
     if (sentence == NULL)
-        return;
+        return -1;
 
 #if USE_STREAM
     if (fd == 0)
-        return;
-    sendFull(fd, sentence, strlen(sentence));
-    sendFull(fd, (const char *) "\n", 1);
+        return -1;
+    int sendResult = sendFull(fd, sentence, strlen(sentence));
+    if (sendResult < 0)
+        return sendResult;
+    sendResult = sendFull(fd, (const char *) "\n", 1);
+    return sendResult;
 #else
     D("sending '%s'", sentence);
 
     if (android_gps_serial_line == NULL) {
         D("missing GPS channel, ignored");
-        return;
+        return -1;
     }
 
     android_serialline_write( android_gps_serial_line, (const void*)sentence, strlen(sentence) );
     android_serialline_write( android_gps_serial_line, (const void*)"\n", 1 );
+    return 0
 #endif
 }
 
@@ -83,7 +91,7 @@ android_gps_send_nmea(int fd, const char *sentence) {
 //         time:            UTC, in the format provided
 //                          by gettimeofday()
 
-void
+int
 android_gps_send_location(int fd, double latitude, double longitude,
                           double metersElevation, int nSatellites,
                           const struct timeval *time) {
@@ -162,10 +170,11 @@ android_gps_send_location(int fd, double latitude, double longitude,
     stralloc_add_str(msgStr, ",,,*47");
 
     // Send it
-    android_gps_send_nmea(fd, stralloc_cstr(msgStr));
+    int sendResult = android_gps_send_nmea(fd, stralloc_cstr(msgStr));
 
     // Free it
     stralloc_reset(msgStr);
+    return sendResult;
 }
 
 int

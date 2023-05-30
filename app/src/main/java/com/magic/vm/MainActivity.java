@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                         0);//nSatellites unused
             });
         });
-        GpsFun.startGps("");
+        GpsFun.startGps("/rootfs");
     }
 
     private void waitPermission(String permission) {

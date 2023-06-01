@@ -211,7 +211,7 @@ public class TransitSensorThread extends Thread implements SensorEventListener {
             info = String.format(Locale.getDefault(), "magnetic-uncalibrated:%g:%g:%g", event.values[0], event.values[1], event.values[2]);
         }
         send256string(info);
-        send256string(String.format(Locale.getDefault(),"guest-sync:%d", CameraFun.getCameraFrameTime()));
+        send256string(String.format(Locale.getDefault(), "guest-sync:%d", CameraFun.getCameraFrameTime()));
         send256string(String.format(Locale.getDefault(), "sync:%d", CameraFun.getCameraFrameTime() / 1000000L + delay * 1000L));
     }
 

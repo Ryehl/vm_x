@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.magic.vm.boxutil.CameraServiceThread;
 import com.magic.vm.boxutil.EventParcelableUtil;
+import com.magic.vm.boxutil.SensorServiceThread;
 import com.magic.vm.boxutil.ThreadUtil;
 import com.magic.vm.boxutil.TransitAudioHwThread;
 import com.magic.vm.boxutil.TransitInputThread;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_FINE_LOCATION,
         }, 0);
         new CameraServiceThread(this, TransitPathConstant.UNIX_SUFFIX).start();
+        new SensorServiceThread().start();
 
         flLayout.post(() -> {
             int width = flLayout.getWidth();

@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         new SensorServiceThread().start();
 
         transitClipboardThread = new TransitClipboardThread();
+        transitClipboardThread.setContext(this);
         transitClipboardThread.start();
 
         flLayout.post(() -> {
@@ -138,8 +139,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (transitClipboardThread != null)
-            transitClipboardThread.updateClipText();
+        ThreadUtil.runOnNewThread(() -> {
+            ThreadUtil.sleepMillis(100);
+            if (transitClipboardThread != null)
+                transitClipboardThread.updateClipText();
+        });
     }
 
     /// --------  NativeMethods  --------///

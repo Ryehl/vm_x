@@ -9,8 +9,6 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.magic.vm.App;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -25,16 +23,21 @@ public class TransitClipboardThread extends Thread {
     private DataOutputStream outputStream;
 
     private String lastClipText = null;
+    private Context context;
 
     private static class ClipCode {
         private static final int CLIP_CONTENT = 0x01;
         private static final int CLIP_CLEAR = 0x02;
     }
 
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     @Override
     public void run() {
         super.run();
-        clipboardManager = (ClipboardManager) App.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         lastClipText = getClipText();
         initServiceSock();
         startStream();
@@ -51,18 +54,26 @@ public class TransitClipboardThread extends Thread {
 
     public void updateClipText() {
         String text = getClipText();
-        if (text == null)
-            return;
-        if (TextUtils.equals(lastClipText, text)) {
+        if (text == null) {
+            Log.e(TAG, "updateClipText: text = null");
             return;
         }
-        if (outputStream == null)
+        if (TextUtils.equals(lastClipText, text)) {
+            Log.e(TAG, "updateClipText: lastClipText = text");
             return;
+        }
+        if (outputStream == null) {
+            Log.e(TAG, "updateClipText: outputStream = null");
+            return;
+        }
         try {
-            outputStream.writeInt(ClipCode.CLIP_CONTENT);
-            outputStream.writeInt(text.length());
-            outputStream.write(text.getBytes(StandardCharsets.UTF_8));
-        }catch (Throwable e) {
+//            outputStream.writeInt(ClipCode.CLIP_CONTENT);
+//            int length = text.length();
+//            Log.e(TAG, "updateClipText: length = " + length);
+//            outputStream.writeInt(length);
+//            outputStream.write(text.getBytes(StandardCharsets.UTF_8));
+            outputStream.writeUTF(text);
+        } catch (Throwable e) {
             Log.e(TAG, "updateClipText error:", e);
         }
         lastClipText = text;
@@ -71,21 +82,9 @@ public class TransitClipboardThread extends Thread {
     private void startStream() {
         while (true) {
             try {
-                int code = inputStream.readInt();
-                int len = inputStream.readInt();
-                byte[] content = new byte[len];
-                inputStream.readFully(content);
-                switch (code) {
-                    case ClipCode.CLIP_CONTENT: {
-                        String s = new String(content);
-                        setClipboardText(s);
-                    }
-                    break;
-                    case ClipCode.CLIP_CLEAR: {
-                        clearClip();
-                    }
-                    break;
-                }
+                String s = inputStream.readUTF();
+                setClipboardText(s);
+                Log.e(TAG, "read: " + s);
             } catch (Throwable e) {
                 Log.e(TAG, "loadStream error: ", e);
                 closeStream();

@@ -24,6 +24,7 @@ import com.magic.vm.boxutil.EventParcelableUtil;
 import com.magic.vm.boxutil.SensorServiceThread;
 import com.magic.vm.boxutil.ThreadUtil;
 import com.magic.vm.boxutil.TransitAudioHwThread;
+import com.magic.vm.boxutil.TransitClipboardThread;
 import com.magic.vm.boxutil.TransitInputThread;
 import com.magic.vm.boxutil.TransitPathConstant;
 import com.magic.vm.cpputil.GpsFun;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "===MainAct";
     private FrameLayout flLayout;
     private TransitInputThread thread;
+    private TransitClipboardThread transitClipboardThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +63,12 @@ public class MainActivity extends AppCompatActivity {
         thread = new TransitInputThread();
         thread.start();
 
-        ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.CAMERA,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-        }, 0);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,}, 0);
         new CameraServiceThread(this, TransitPathConstant.UNIX_SUFFIX).start();
         new SensorServiceThread().start();
+
+        transitClipboardThread = new TransitClipboardThread();
+        transitClipboardThread.start();
 
         flLayout.post(() -> {
             int width = flLayout.getWidth();
@@ -94,10 +94,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //assert true
             return;
         }
@@ -117,18 +114,12 @@ public class MainActivity extends AppCompatActivity {
         }
         Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
         if (lastKnownLocation != null) {
-            GpsFun.updateGps(lastKnownLocation.getLatitude(),
-                    lastKnownLocation.getLongitude(),
-                    lastKnownLocation.getAltitude(),
-                    0);//nSatellites unused
+            GpsFun.updateGps(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), lastKnownLocation.getAltitude(), 0);//nSatellites unused
         }
 
         runOnUiThread(() -> {
             locationManager.requestLocationUpdates(locationProvider, 30 * 1000, 0, location -> {
-                GpsFun.updateGps(location.getLatitude(),
-                        location.getLongitude(),
-                        location.getAltitude(),
-                        0);//nSatellites unused
+                GpsFun.updateGps(location.getLatitude(), location.getLongitude(), location.getAltitude(), 0);//nSatellites unused
             });
         });
         GpsFun.startGps("/rootfs");
@@ -144,6 +135,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (transitClipboardThread != null)
+            transitClipboardThread.updateClipText();
+    }
 
     /// --------  NativeMethods  --------///
     //<editor-fold desc="NativeMethods">

@@ -1,4 +1,4 @@
-package com.magic.vm.boxutil;
+package com.magic.vm.snapdatathread;
 
 import android.Manifest;
 import android.content.Context;
@@ -23,6 +23,8 @@ import android.util.Size;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import com.magic.vm.boxutil.ByteUtil;
+import com.magic.vm.boxutil.SocketUtil;
 import com.magic.vm.cpputil.CameraFun;
 
 import java.io.DataInputStream;

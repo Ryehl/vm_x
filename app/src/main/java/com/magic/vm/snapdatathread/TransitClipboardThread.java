@@ -1,18 +1,19 @@
-package com.magic.vm.boxutil;
+package com.magic.vm.snapdatathread;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.net.LocalServerSocket;
 import android.net.LocalSocket;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.magic.vm.boxutil.SocketUtil;
+import com.magic.vm.entity.TransitPathConstant;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 public class TransitClipboardThread extends Thread {
     private static final String TAG = "xxx_clip";
@@ -24,11 +25,6 @@ public class TransitClipboardThread extends Thread {
 
     private String lastClipText = null;
     private Context context;
-
-    private static class ClipCode {
-        private static final int CLIP_CONTENT = 0x01;
-        private static final int CLIP_CLEAR = 0x02;
-    }
 
     public void setContext(Context context) {
         this.context = context;
@@ -67,11 +63,6 @@ public class TransitClipboardThread extends Thread {
             return;
         }
         try {
-//            outputStream.writeInt(ClipCode.CLIP_CONTENT);
-//            int length = text.length();
-//            Log.e(TAG, "updateClipText: length = " + length);
-//            outputStream.writeInt(length);
-//            outputStream.write(text.getBytes(StandardCharsets.UTF_8));
             outputStream.writeUTF(text);
         } catch (Throwable e) {
             Log.e(TAG, "updateClipText error:", e);
@@ -90,16 +81,6 @@ public class TransitClipboardThread extends Thread {
                 closeStream();
                 initServiceSock();
             }
-        }
-    }
-
-    private void clearClip() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            clipboardManager.clearPrimaryClip();
-            lastClipText = null;
-        } else {
-            setClipboardText("");
-            lastClipText = "";
         }
     }
 

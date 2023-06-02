@@ -2,6 +2,7 @@ package com.magic.vm;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -19,21 +20,26 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.magic.vm.boxutil.CameraServiceThread;
+import com.google.gson.Gson;
 import com.magic.vm.boxutil.EventParcelableUtil;
-import com.magic.vm.boxutil.SensorServiceThread;
 import com.magic.vm.boxutil.ThreadUtil;
-import com.magic.vm.boxutil.TransitAudioHwThread;
-import com.magic.vm.boxutil.TransitClipboardThread;
-import com.magic.vm.boxutil.TransitInputThread;
-import com.magic.vm.boxutil.TransitPathConstant;
 import com.magic.vm.cpputil.GpsFun;
+import com.magic.vm.entity.ActionConstant;
+import com.magic.vm.entity.EmulatorInstallListBean;
+import com.magic.vm.entity.TransitPathConstant;
+import com.magic.vm.snapdatathread.CameraServiceThread;
+import com.magic.vm.snapdatathread.SensorServiceThread;
+import com.magic.vm.snapdatathread.TransitAudioHwThread;
+import com.magic.vm.snapdatathread.TransitClipboardThread;
+import com.magic.vm.snapdatathread.TransitInputThread;
+import com.magic.vm.ui.activity.SelectAppActivity;
 import com.magic.vm.util.DensityUtils;
 import com.magic.vm.util.Extractor;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static final String TAG = "===MainAct";
+    private static final int FLAG_SELECT_APP = 0x1000;
     private FrameLayout flLayout;
     private TransitInputThread thread;
     private TransitClipboardThread transitClipboardThread;
@@ -136,13 +143,69 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    public void handleData(int action, byte[] data, byte[] raw) {
+        if (action != ActionConstant.ACTION_CHECK_LINK) Log.e(TAG, "handleData: " + action);
+        switch (action) {
+            case ActionConstant.ACTION_CHECK_LINK:
+                //do noting
+                break;
+            case ActionConstant.ACTION_SETTING:
+                runOnUiThread(() -> {
+//                    HomeLeftDialog homeLeftDialog = new HomeLeftDialog(this);
+//                    homeLeftDialog.show();
+                });
+                break;
+
+            case ActionConstant.ACTION_VIP:
+                runOnUiThread(() -> {
+//                    Intent intent = new Intent(this, GetVipActivity.class);
+//                    startActivity(intent);
+                });
+                break;
+
+            case ActionConstant.ACTION_SHARE:
+                runOnUiThread(() -> {
+//                    ShareDialog shareDialog = new ShareDialog(this);
+//                    shareDialog.show();
+                });
+                break;
+
+            case ActionConstant.ACTION_FUN_GUIDE:
+//                WebActivity.start(this, Constant.URL_GUIDE);
+                break;
+
+            case ActionConstant.ACTION_FUN_CREATE_VM:
+                runOnUiThread(() -> {
+//                    Intent intent = new Intent(this, DoubleOpenActivity.class);
+//                    startActivity(intent);
+                });
+                break;
+
+            case ActionConstant.ACTION_FUN_PINP:
+                //画中画
+                break;
+
+            case ActionConstant.ACTION_ADD_APK:
+                runOnUiThread(() -> {
+                    String s = new String(data);
+                    EmulatorInstallListBean bean = new Gson().fromJson(s, EmulatorInstallListBean.class);
+                    Intent intent = new Intent(this, SelectAppActivity.class);
+                    if (bean != null) {
+                        intent.putStringArrayListExtra(SelectAppActivity.PARAM_INSTALLED_APP_LIST, new ArrayList<>(bean.getData()));
+                    }
+                    startActivityForResult(intent, FLAG_SELECT_APP);
+                });
+                break;
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         ThreadUtil.runOnNewThread(() -> {
             ThreadUtil.sleepMillis(100);
-            if (transitClipboardThread != null)
-                transitClipboardThread.updateClipText();
+            if (transitClipboardThread != null) transitClipboardThread.updateClipText();
         });
     }
 

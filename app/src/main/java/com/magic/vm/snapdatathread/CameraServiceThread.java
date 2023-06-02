@@ -1,9 +1,13 @@
-package com.magic.vm.boxutil;
+package com.magic.vm.snapdatathread;
 
 import android.content.Context;
 import android.net.LocalServerSocket;
 import android.net.LocalSocket;
 import android.util.Log;
+
+import com.magic.vm.boxutil.ThreadUtil;
+import com.magic.vm.entity.TransitPathConstant;
+import com.magic.vm.snapdatathread.TransitCameraThread;
 
 import java.io.IOException;
 

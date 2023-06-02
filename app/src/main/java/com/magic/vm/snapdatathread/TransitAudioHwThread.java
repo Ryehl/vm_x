@@ -1,10 +1,17 @@
-package com.magic.vm.boxutil;
+package com.magic.vm.snapdatathread;
 
 import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.net.LocalServerSocket;
 import android.net.LocalSocket;
 import android.util.Log;
+
+import com.magic.vm.boxutil.AudioHwCodes;
+import com.magic.vm.boxutil.AudioRecordManager;
+import com.magic.vm.boxutil.AudioTrackManager;
+import com.magic.vm.boxutil.SocketUtil;
+import com.magic.vm.boxutil.ThreadUtil;
+import com.magic.vm.entity.TransitPathConstant;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

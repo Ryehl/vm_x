@@ -7,4 +7,35 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="box_33">#FF333333</color>
+    <color name="box_f7">#FFF7F7F7</color>
+    <color name="box_efeefc">#FFEFEEFC</color>
+    <color name="box_8078e9">#FF8078E9</color>
+    <color name="box_ff5454">#FFFF5454</color>
+    <color name="box_d8d6e8">#FFD8D6E8</color>
+    <color name="box_b7b7e2">#FFB7B7E2</color>
+    <color name="box_5f54e3">#FF5F54E3</color>
+    <color name="box_44d7b6">#FF44D7B6</color>
+    <color name="box_bab5e8">#FFBAB5E8</color>
+
+    <!--50%透明度-->
+    <color name="box_50_000">#77000000</color>
+
+    <!--38%透明度-->
+    <color name="box_38_5f54e3">#615F54E3</color>
+
+    <!--30%透明度-->
+    <color name="box_30_33">#4d333333</color>
+
+    <!--16%透明度-->
+    <color name="box_16_000">#29000000</color>
+    <!--5%透明度-->
+    <color name="box_05_000">#12000000</color>
+    <color name="box_05_8078e9">#128078E9</color>
+    <color name="box_05_857dee">#12857DEE</color>
+
+    <color name="box_11_8078e9">#1c8078E9</color>
+
+    <color name="box_40_000">#66000000</color>
 </resources>

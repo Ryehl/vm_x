@@ -13,4 +13,21 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+
+    <style name="dialogLeftWindowAnim" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_left_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/dialog_left_exit_anim</item>
+    </style>
+
+    <style name="dialogBottomWindowAnim" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_bottom_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/dialog_bottom_exit_anim</item>
+    </style>
+
+
+    <!-- dialog -->
+    <style name="baseDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

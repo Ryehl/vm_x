@@ -1,4 +1,4 @@
-package com.magic.vm.boxutil;
+package com.magic.vm.snapdatathread;
 
 import android.net.LocalServerSocket;
 import android.net.LocalSocket;
@@ -6,7 +6,10 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
+import com.magic.vm.boxutil.SocketUtil;
+import com.magic.vm.boxutil.ThreadUtil;
 import com.magic.vm.cpputil.InputEventFun;
+import com.magic.vm.entity.TransitPathConstant;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

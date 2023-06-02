@@ -1,3 +1,45 @@
 <resources>
     <string name="app_name">vm</string>
+
+    <string name="get_vip">Get VIP</string>
+    <string name="notification">Notification</string>
+    <string name="feedback">Feedback</string>
+    <string name="language">Language</string>
+    <string name="system">System</string>
+    <string name="version">Version</string>
+    <string name="vip">VIP</string>
+
+    <string name="premium">Premium</string>
+    <string name="web">Web</string>
+    <string name="search_app">Search App</string>
+    <string name="select_app">Select App</string>
+    <string name="double_open">Double open</string>
+    <string name="double_open_tag">Creatures of Aether%s</string>
+
+    <string name="share_facebook">Facebook</string>
+    <string name="share_whats">Whats</string>
+    <string name="share_line">Line</string>
+    <string name="copy_link">Copy link</string>
+    <string name="box_sure">OK</string>
+    <string name="box_cancel">Cancel</string>
+    <string name="box_alert">Tips</string>
+
+    <string name="box_open">Open</string>
+    <string name="box_create">Create</string>
+
+    <string name="unit_dollar">$</string>
+    <string name="add_apps">Add App (%s)</string>
+    <string name="add_apps_0">Add App</string>
+
+    <string name="premium_1_title">No ADs</string>
+    <string name="premium_1_info">Enjoy an ad-free experience</string>
+    <string name="premium_2_title">Quick Start</string>
+    <string name="premium_2_info">Click the icon on the home page to run the application</string>
+    <string name="premium_3_title">Open More</string>
+    <string name="premium_3_info">Clone multiple applications and accounts</string>
+    <string name="premium_4_title">Picture in Picture</string>
+    <string name="premium_4_info">Clone multiple applications and accounts</string>
+
+    <string name="choose_share_way">Choose a sharing way</string>
+    <string name="cancel_pay_tip">* Cancel anytime in Google pay</string>
 </resources>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/iv_min_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_icon"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/ll_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        tools:layout_width="150dp"
+        tools:visibility="visible">
+
+        <RelativeLayout
+            android:id="@+id/rl_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/black">
+
+            <ImageView
+                android:id="@+id/iv_toolbar_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="5dp"
+                android:src="@mipmap/ic_icon" />
+
+            <ImageView
+                android:id="@+id/iv_toolbar_fix"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_toEndOf="@id/iv_toolbar_icon"
+                android:padding="8dp"
+                android:src="@mipmap/ic_toolbar_fix_n" />
+
+            <ImageView
+                android:id="@+id/iv_toolbar_min"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_toStartOf="@id/iv_toolbar_max"
+                android:padding="8dp"
+                android:src="@mipmap/ic_toolbar_min" />
+
+            <ImageView
+                android:id="@+id/iv_toolbar_max"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_toStartOf="@id/iv_toolbar_close"
+                android:padding="8dp"
+                android:src="@mipmap/ic_toolbar_max" />
+
+            <ImageView
+                android:id="@+id/iv_toolbar_close"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:padding="8dp"
+                android:src="@mipmap/ic_toolbar_close" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_screen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout_height="300dp">
+
+            <ImageView
+                android:id="@+id/iv_show"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white" />
+
+            <View
+                android:id="@+id/view_shadow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#33333333" />
+
+            <ImageView
+                android:id="@+id/iv_float_min"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:padding="5dp"
+                android:src="@mipmap/ic_float_min" />
+
+            <ImageView
+                android:id="@+id/iv_full_screen"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:padding="5dp"
+                android:src="@mipmap/ic_float_full_screen" />
+
+            <ImageView
+                android:id="@+id/iv_float_mute"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:padding="5dp"
+                android:src="@mipmap/ic_float_sound_s" />
+
+            <ImageView
+                android:id="@+id/iv_float_switch"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:padding="5dp"
+                android:src="@mipmap/ic_float_switch" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+</FrameLayout>

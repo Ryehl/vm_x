@@ -1,4 +1,4 @@
-package com.magic.vm.boxutil;
+package com.magic.vm.snapdatathread;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -10,6 +10,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.magic.vm.App;
+import com.magic.vm.boxutil.ByteUtil;
+import com.magic.vm.boxutil.SocketUtil;
 import com.magic.vm.cpputil.CameraFun;
 
 import java.io.DataInputStream;

@@ -3,6 +3,7 @@ package com.magic.vm;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -25,20 +27,25 @@ import com.magic.vm.boxutil.EventParcelableUtil;
 import com.magic.vm.boxutil.ThreadUtil;
 import com.magic.vm.cpputil.GpsFun;
 import com.magic.vm.entity.ActionConstant;
+import com.magic.vm.entity.ApkTransportBean;
 import com.magic.vm.entity.EmulatorInstallListBean;
 import com.magic.vm.entity.TransitPathConstant;
 import com.magic.vm.snapdatathread.CameraServiceThread;
+import com.magic.vm.snapdatathread.EmulatorInterActiveThread;
 import com.magic.vm.snapdatathread.SensorServiceThread;
 import com.magic.vm.snapdatathread.TransitAudioHwThread;
 import com.magic.vm.snapdatathread.TransitClipboardThread;
 import com.magic.vm.snapdatathread.TransitInputThread;
 import com.magic.vm.ui.activity.SelectAppActivity;
+import com.magic.vm.util.AppUtil;
 import com.magic.vm.util.DensityUtils;
 import com.magic.vm.util.Extractor;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,10 +58,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static final String TAG = "===MainAct";
+    private static final String PARAM_APP_LIST = "p_app_list";
     private static final int FLAG_SELECT_APP = 0x1000;
     private FrameLayout flLayout;
     private TransitInputThread thread;
     private TransitClipboardThread transitClipboardThread;
+    private EmulatorInterActiveThread interActiveThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
         transitClipboardThread = new TransitClipboardThread();
         transitClipboardThread.setContext(this);
         transitClipboardThread.start();
+        interActiveThread = new EmulatorInterActiveThread(this);
+        interActiveThread.start();
 
         flLayout.post(() -> {
             int width = flLayout.getWidth();
@@ -282,6 +293,37 @@ public class MainActivity extends AppCompatActivity {
             }
             Vm.start(rootfs);
         }).start();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FLAG_SELECT_APP
+                && resultCode == RESULT_OK
+                && data != null) {
+            ArrayList<PackageInfo> appList = data.getParcelableArrayListExtra(PARAM_APP_LIST);
+            if (appList == null || appList.size() == 0) return;
+            ThreadUtil.runOnNewThread(() -> {
+                for (PackageInfo packageInfo : appList) {
+                    String appName = AppUtil.getAppName(this, packageInfo);
+                    File file = new File(packageInfo.applicationInfo.sourceDir);
+                    long length = file.length();
+                    String info = new Gson().toJson(ApkTransportBean.create(length, appName, packageInfo.packageName));
+                    try {
+                        FileInputStream fileInputStream = new FileInputStream(file);
+                        byte[] bytes = new byte[102400];
+                        int len;
+
+                        while ((len = fileInputStream.read(bytes)) != -1) {
+                            //todo copy to vm
+                        }
+                    } catch (Throwable e) {
+                        Log.e(TAG, "onActivityResult: ", e);
+                    }
+                }
+            });
+
+        }
     }
 
 

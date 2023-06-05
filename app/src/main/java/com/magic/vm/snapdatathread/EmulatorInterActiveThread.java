@@ -47,7 +47,7 @@ public class EmulatorInterActiveThread extends Thread {
         synchronized (lock_data) {
             InterActiveEntity entity = new InterActiveEntity(action, data, raw);
             activeList.add(entity);
-            Log.e(TAG, "postData: " + raw.length);
+//            Log.e(TAG, "postData: " + raw.length);
         }
     }
 

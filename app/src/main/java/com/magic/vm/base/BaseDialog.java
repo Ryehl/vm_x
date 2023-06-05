@@ -9,7 +9,7 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.cangyu.boxmagic.R;
+import com.magic.vm.R;
 
 
 public abstract class BaseDialog extends Dialog {
